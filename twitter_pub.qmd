@@ -1,0 +1,66 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+## Purpose of script
+
+Download data entries foreign exchange rates January to July 2022 from USA Treasury API
+
+```{r load_packages}
+#| echo: false
+library(httr) #used to connect to API
+library(jsonlite) #for working with JSON format,
+library(readr)
+library(tibble)
+library(dplyr)
+```
+
+## Connect to USA Treasury API
+
+```{r}
+#| echo: false
+#Plot wsj usd ghc data----
+library(ggplot2)
+library(plotly)
+#library(dygraphs)
+#library(xts)
+
+wsj_usd_ghc <- read_csv("C:/Users/Korantema/Downloads/HistoricalPrices.csv",
+col_types = cols(Date = col_date(format = "%m/%d/%y")))
+
+wsj <- xts(x = wsj_usd_ghc$High, order.by = wsj_usd_ghc$Date)
+
+
+wsj_plot <- dygraph(wsj)
+wsj_plot
+
+gp<-wsj_usd_ghc |> 
+  dplyr::mutate(monthly= factor(lubridate::floor_date(Date,unit="month")),
+                yearly= factor(format(Date,"%Y")))|> 
+  ggplot2::ggplot()+
+  geom_line(aes(x=Date, y=High, color=yearly))+
+  #facet_wrap(~yearly)+
+  sjPlot::theme_sjplot2()+
+  ylab("1 USD-Ghana cedis exchange rate")+ xlab("Time period")+
+  ggtitle("January 2020 to August 2022",
+          subtitle="January 2020 to August 2022")+
+  sjPlot::scale_color_sjplot(palette = "eight")+
+  scale_x_date(date_breaks = "4 month", date_labels = "%b")+
+  guides(x = guide_axis(angle = 45))+
+  theme(legend.position = "bottom")#+
+
+p<-ggplotly(gp)
+p
+
+  #subseting data to display Power rating
+  geom_text(data= daily_sum_rotations_energy %>% group_by(miller_name)%>%
+              filter(single_date==max(single_date)),
+            vjust= -5.5,hjust= "right", size=4,
+
+            aes(x=single_date, y=daily_sum_energy_consumption,
+                label= paste("Power rating=",power_rating_hp,"hp")))
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).

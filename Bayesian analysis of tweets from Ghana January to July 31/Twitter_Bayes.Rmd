@@ -1,0 +1,133 @@
+---
+title: Bayesian analysis of tweets from Ghana January to July
+classoption: ba
+author:
+  - firstname: Ama
+    lastname: Owusu-Darko
+    email: aowusuda@asu.edu
+    url: www.example.com/aliceanon
+    affiliationref: addr1
+    footnoterefs: 
+      - t1
+      - t2
+      - m1
+ 
+affiliations:
+  - ref: addr1
+    name: Some Institute of Technology 
+    address: Department, Street, City, State, Zip
+  - ref: addr2
+    name: Another University
+    address: Department, Street, City, State, Zip
+footnotes:
+  - ref: t1
+    text: "Corresponding Author"
+  - ref: t2
+    text: "Equal contribution"
+
+MSC2020primary:
+  - 62C10
+  - 62F15
+MSC2020secondary:
+  - 60K35
+  - 91A27
+keywords:
+  - bayesian
+  - statistics
+supplements:
+  - title: Title of Supplement A
+    description: Short description of Supplement A.
+  - title: Title of Supplement B
+    description: Short description of Supplement B.
+doi: "10.31219/osf.io/wh3wr"
+arxiv: 2010.010101
+acknowledgements: |
+  And this is an acknowledgements section with a heading that was produced by the `acks` environment. Thank you all for helping me writing this Rmarkdown sample file.
+
+  Also thankful to God and my mom.
+abstract: |
+  The abstract should summarize the contents of the paper. It should be clear, descriptive, self-explanatory and not longer than 200 words. It should also be suitable for publication in abstracting services. Please avoid using math formulas as much as possible.
+
+  This is a sample input file.  Comparing it with the output it generates can show you how to produce a simple document of your. That was the second paragraph.
+date: "`r Sys.Date()`"
+bibliography: sample.bib
+#linenumbers: true
+#numbersections: true
+output: 
+  bookdown::pdf_book: 
+    base_format: rticles::isba_article
+    md_extensions: -autolink_bare_uris #keep these off or \printead{} will fail on email addresses
+---
+
+## Introduction
+
+In a space of 6 months, the Ghana cedi has depreciated sharply against the US Dollar. Today, August 16th, the Public Utilities Commission has approved a 21% increase in Electricity costs and 27% on Water Costs. Prices of goods in Ghana have followed suit and been increased dramatically. Sometimes just the whiff of a rumor that the petrol prices are increasing or the Cedi-US Dollar exchange rate increasing sends prices in free fall.
+
+One significant issue that affects costs of goods in Ghana is the US Dollar-Cedi Exchange rate. The official currency of Ghana is Ghana cedis however some key sectors of the economy mainly housing price in dollars. Thus, people living in dollar rated apartments have experienced a 65% hike in rent prices due to the astromonical change in the exchange rate from 1 USD to 6.15 Ghana Cedi as at 3rd January, 2022 to 9.43 Ghana Cedi as at August 16th. despite the Bank of Ghana's directive prohibiting pricing in dollars.
+
+Clearly, the Cedi-USD exchange rate affects economic prices in Ghana. Social media has become a preferred method for Ghanaians to express their displeasure at the president and ruling government for the mismanagement of the economy. There is a lighthearted pseudo-self decrepiating side. The Memes, the shock and awe of reducing purchasing power of 1 Ghana cedi.
+
+## Bayesian Analysis of Binomial Probability of Ghanaian Tweets 
+This analysis seeks to answer the following key questions;
+
+### Prior Probability
+1. In February, March, May, July and August  2022 prior probability that a tweet contains the words-
+(US Dollar, Ghana cedi, Nana Akuffo Addo, Inflation, petrol, IMF(July), depreciation) is 0.5.
+
+### Likelihood
+I would like to analyze tweets generated from Ghana to understand how Ghanaians express their sentiments about the economy on Twitter.
+
+
+```{r wsj_plotly}
+library(plotly)
+#Plot wsj usd ghc data----
+library(ggplot2)
+
+wsj_usd_ghc <- read_csv("C:/Users/Korantema/Downloads/HistoricalPrices.csv",
+col_types = cols(Date = col_date(format = "%m/%d/%y")))
+
+gp<-wsj_usd_ghc |> 
+  filter(!Date=="2019-12-31")|> 
+  dplyr::mutate(yearly= factor(format(Date,"%Y")))|> 
+  ggplot2::ggplot()+
+  scale_y_continuous(n.breaks=8)+
+  geom_line(aes(x=Date, y=High, color=yearly))+
+  #facet_wrap(~yearly,scales="free_x")+
+  sjPlot::theme_sjplot2()+
+  ylab("1 USD to Ghana Cedi exchange rate")+ xlab("Time period")+
+  ggtitle("January 2020 to August 2022")+
+  sjPlot::scale_color_sjplot(palette = "eight")+
+  scale_x_date(date_breaks = "2 month", date_labels = "%b")+
+  #guides(x = guide_axis(angle = 45))+
+  theme(legend.position = "bottom")#+
+
+gp
+p<-ggplotly(gp)
+p
+
+```
+
+## YAML fields
+
+For `MSC2020primary` and `MSC2020secondary`, please refer to [MSC database](https://mathscinet.ams.org/mathscinet/msc/msc2020.html).
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot. Because printing is different from typewriting, there are a number of things that you have to do differently when preparing an input file than if you were just typing the document directly.  Quotation marks separates the double and single quote. 
+
+$$a+b\geq c$$
+where $a$ is a variable and $c$ is variable as well.
+
+Dashes come in three sizes: a hyphen, an intra-word dash, a medium dash for number ranges like 1--2, and a punctuation dash in place of a comma, semicolon, colon or parentheses ---like this.
+
+The following are some other citations to check that the bibliographic style file is working correctly: \citet{akaike}, \citet*{akivarsq},
+\citet*{kstuart}, and \citet{companion}.  
+
+# References {#references .unnumbered}
+
